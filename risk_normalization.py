@@ -144,6 +144,7 @@ def make_one_equity_sequence(
     trades,
     fraction,
     number_trades_in_forecast,
+    number_days_in_forecast,
     initial_capital         ):
 
     """
@@ -197,6 +198,7 @@ def analyze_distribution_of_drawdown(
     trades,
     fraction,
     number_trades_in_forecast,
+    number_days_in_forecast,
     initial_capital,
     number_equity_in_CDF,
     tail_percentile
@@ -212,7 +214,9 @@ def analyze_distribution_of_drawdown(
 
     for i in range(number_equity_in_CDF):
         equity, max_drawdown = make_one_equity_sequence(trades, 
-                                fraction, number_trades_in_forecast,
+                                fraction, 
+                                number_trades_in_forecast,
+                                number_days_in_forecast,     
                                 initial_capital)
         equity_list.append(equity)
         max_dd_list.append(max_drawdown)
@@ -228,6 +232,7 @@ def analyze_distribution_of_drawdown(
 def form_distribution_of_equity(
     trades,
     fraction,
+    number_trades_in_forecast,
     number_days_in_forecast,
     initial_capital,
     number_equity_in_CDF       ):
@@ -239,7 +244,9 @@ def form_distribution_of_equity(
 
     for i in range(number_equity_in_CDF):
         equity, max_drawdown = make_one_equity_sequence(trades, 
-                                fraction, number_trades_in_forecast,
+                                fraction, 
+                                number_trades_in_forecast,
+                                number_days_in_forecast,
                                 initial_capital)
         equity_list.append(equity)
         max_dd_list.append(max_drawdown)
@@ -252,6 +259,7 @@ def form_distribution_of_equity(
 
 def risk_normalization(
         trades, 
+        numbere_trades_in_forecast,
         number_days_in_forecast, 
         initial_capital, 
         tail_percentage, 
@@ -278,6 +286,7 @@ def risk_normalization(
             tail_risk = analyze_distribution_of_drawdown(trades, 
                                                  fraction,
                                                  number_trades_in_forecast,
+                                                 number_days_in_forecast,
                                                  initial_capital,
                                                  number_equity_in_CDF,
                                                  tail_percentile)
@@ -299,6 +308,7 @@ def risk_normalization(
         
         # number_trades_in_forecast: 
         CDF_equity = form_distribution_of_equity(trades, fraction,
+                                                 number_trades_in_forecast,
                                                  number_days_in_forecast,
                                                  initial_capital,
                                                  number_equity_in_CDF)
@@ -408,6 +418,7 @@ print (f'tail_percentile:             {tail_percentile}')
 
 safe_f, CAR25 = risk_normalization(
         trades, 
+        number_trades_in_forecast,
         number_days_in_forecast, 
         initial_capital, 
         tail_percentile, 
