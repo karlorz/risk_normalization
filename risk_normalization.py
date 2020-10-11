@@ -79,8 +79,8 @@ The trader is able and willing to change position daily.
 Use:
   safe-f, CAR25 = risk_normalization(
                     trades,
-                    number_days_in_forecast=504,
                     number_trades_in_forecast,
+                    number_days_in_forecast=504,
                     initial_capital=100000.0,
                     tail_percentage=5,
                     drawdown_tolerance=0.10,
