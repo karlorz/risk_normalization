@@ -75,7 +75,8 @@ A trade list has been created by some process. It could be live trades, validati
 ## Use:
 
 safe-f, CAR25 = risk_normalization(   
-        trades, 
+        trades,
+        number_trades_in_forcast,
         number_days_in_forecast, 
         initial_capital, 
         tail_percentage, 
@@ -84,7 +85,9 @@ safe-f, CAR25 = risk_normalization(
 
 Parameters: 
 * trades: The set of trades to evaluate. Expecting a numpy array with one dimension. 
-* sequence_length: the forecast period. The number of trades to draw for each equity sequence. 
+* number_trades_in_forecast: the number of trades needed to complete the forecast period.
+* number_of_days_in_forecast: the number of trading days in the forecast periods. 
+    Typically 504 for a 2 year forecast number_repetitions:
 * initial_capital: initial amount in the trading account. Default = $100,000.00. 
 * tail_percentage: The percentage at which to measure the tail risk. Default = 5.
 * drawdown_tolerance: The traders drawdown tolerance. Expressed as a proportion of maximum equity to date. Default = 0.10 == a 10% drawdown. 
@@ -100,8 +103,6 @@ Returns:
 * equity: list used to accumulate day by day equity 
 * max_equity: maximum equity to date
 * file_name: name of csv or txt file containing trades fraction: during calculations, the then current estimate of position size, safe-f initial_capital: trading account allocated to this system in dollars Typically 100000.0
-* number_days_in_forecast: number of days in forecast horizon
-Typically 504 for a 2 year forecast number_repetitions:
 * number of replications of calculation of safe-f and CAR25. Typically 10. 
 * number_sequences: number of equity sequences used to form the distribution. Typically 1000.
 * number_trades_in_forecast: number of trades in each equity sequence.  Either:
