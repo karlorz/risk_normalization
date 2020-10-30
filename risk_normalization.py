@@ -4,6 +4,7 @@
 risk_normalization.py
 
 This file created on Tuesday, October 9, 2020
+Modified on Friday, October 30, 2020
 
 Risk normalization routines designed by Dr. Howard Bandy, 
 Blue Owl Press.
