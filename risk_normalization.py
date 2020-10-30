@@ -218,8 +218,8 @@ def analyze_distribution_of_drawdown(
         max_dd_list.append(max_drawdown)
 
     sorted_max_dd = np.sort(max_dd_list)
-    plt.plot(sorted_max_dd)
-    plt.show()
+#    plt.plot(sorted_max_dd)
+#    plt.show()
 
     tail_risk = np.percentile(sorted_max_dd, 100 - tail_percentile)
 
@@ -232,8 +232,8 @@ def form_distribution_of_equity(
     initial_capital,
     number_equity_in_CDF       ):
     
-    plt.hist(trades,bins=50)
-    plt.show()
+#    plt.hist(trades,bins=50)
+#    plt.show()
     equity_list = []
     max_dd_list = []
 
@@ -245,8 +245,8 @@ def form_distribution_of_equity(
         max_dd_list.append(max_drawdown)
 
     sorted_equity = np.sort(equity_list)
-    plt.plot(sorted_equity)
-    plt.show()
+#    plt.plot(sorted_equity)
+#    plt.show()
 
     return sorted_equity
 
