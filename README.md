@@ -76,10 +76,10 @@ A trade list has been created by some process. It could be live trades, validati
 
 safe-f, CAR25 = risk_normalization(   
         trades,
-        number_trades_in_forcast,
-        number_days_in_forecast, 
+        number_days_in_forcast,
+        number_trades_in_forecast, 
         initial_capital, 
-        tail_percentage, 
+        tail_percentile, 
         drawdown_tolerance, 
         number_equity_in_CDF  )
 
@@ -89,7 +89,7 @@ Parameters:
 * number_of_days_in_forecast: the number of trading days in the forecast periods. 
     Typically 504 for a 2 year forecast number_repetitions:
 * initial_capital: initial amount in the trading account. Default = $100,000.00. 
-* tail_percentage: The percentage at which to measure the tail risk. Default = 5.
+* tail_percentile: The percentage at which to measure the tail risk. Default = 5.
 * drawdown_tolerance: The traders drawdown tolerance. Expressed as a proportion of maximum equity to date. Default = 0.10 == a 10% drawdown. 
 * number_equity_in_CDF: The number of equity curves used to compute a single CDF. Default = 1000
 
