@@ -139,12 +139,6 @@ number_trades_in_best_est: number of trades in best estimate set
                                   of trades
 """
 
-import math
-import matplotlib.pyplot as plt
-import numpy as np
-import random
-import statistics
-
 def make_one_equity_sequence(
     trades,
     fraction,
