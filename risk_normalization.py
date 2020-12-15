@@ -4,7 +4,9 @@
 risk_normalization.py
 
 This file created on Tuesday, October 9, 2020
-Modified on Friday, October 30, 2020
+Modified on Friday, December 11, 2020
+... separated risk_normalization and related procedures
+... in preparation for publishing on PyPI
 
 Risk normalization routines designed by Dr. Howard Bandy, 
 Blue Owl Press.
@@ -113,8 +115,10 @@ Parameters:
 Returns:
   safe_f:  The fraction of the trading account that will be
       used for each trade.
+  safe_f_stdev:  standard deviation of safe_f calculations.     
   CAR25:  The compound annual rate of return for the given
       set of trades and position size.
+  CAR25_stdev:  standard deviation of CAR25 calculations.     
 
 
 definitions of variables
@@ -270,11 +274,10 @@ def risk_normalization(
         initial_capital, 
         tail_percentile, 
         drawdown_tolerance, 
-        number_equity_in_CDF  
+        number_equity_in_CDF,
+        number_repetitions
         ):
 
-    #  Set number of repetitions of calculation to get stddev of mean
-    number_repetitions = 10
     safe_fs = []
     TWR25s = []
     CAR25s = []
@@ -337,108 +340,35 @@ def risk_normalization(
     # print(TWR25s)
     # print(CAR25s)
     
-    print (f'mean and standard deviation are based on {number_repetitions}'
-           ' calculations')    
+    # print (f'mean and standard deviation are based on {number_repetitions}'
+    #        ' calculations')    
     safe_f_mean = statistics.mean(safe_fs)
-    print (f'safe_f_mean:   {safe_f_mean:0.3f}')
+    # print (f'safe_f_mean:   {safe_f_mean:0.3f}')
     if number_repetitions > 1:
         safe_f_stdev = statistics.stdev(safe_fs)
-        print (f'safe_f_stdev:  {safe_f_stdev:0.3f}')
+    #     print (f'safe_f_stdev:  {safe_f_stdev:0.3f}')
     else:
-        safe_f_stdev = 1.0
-        print ('standard deviation calculation is not meaningful')
+        safe_f_stdev = 0.0
+    #     print ('standard deviation calculation is not meaningful')
     
     TWR25_mean = statistics.mean(TWR25s)
-    print (f'TWR25_mean:   {TWR25_mean:0.0f}')
+    # print (f'TWR25_mean:   {TWR25_mean:0.0f}')
     if number_repetitions > 1:
         TWR25_stdev = statistics.stdev(TWR25s)
-        print (f'TWR25_stdev:  {TWR25_stdev:0.3f}')
+    #     print (f'TWR25_stdev:  {TWR25_stdev:0.3f}')
     else:
-        TWR25_stdev = 1.0
-        print ('standard deviation calculation is not meaningful')
+        TWR25_stdev = 0.0
+    #     print ('standard deviation calculation is not meaningful')
     
     CAR25_mean = statistics.mean(CAR25s)
-    print (f'CAR25_mean:   {CAR25_mean:0.3f}%')
+    # print (f'CAR25_mean:   {CAR25_mean:0.3f}%')
     if number_repetitions > 1:
         CAR25_stdev = statistics.stdev(CAR25s)
-        print (f'CAR25_stdev:  {CAR25_stdev:0.3f}%')
+    #     print (f'CAR25_stdev:  {CAR25_stdev:0.3f}%')
     else:
-        CAR25_stdev = 1.0
-        print ('standard deviation calculation is not meaningful')
+        CAR25_stdev = 0.0
+    #     print ('standard deviation calculation is not meaningful')
     
-    return (safe_f_mean, CAR25_mean)
+    return (safe_f_mean, safe_f_stdev, CAR25_mean, CAR25_stdev)
 
 
-#  Main program to illustrate the use of risk_normalization()
-#
-#  Obtain the 'best estimate' of trades to analyze.
-#  This program reads that set from a file.  Other
-#  programs might generate it on-the-fly, and 
-#  analyze it on-the-fly.
-#
-#  Read a text file containing the list of trades
-#  Each of these has one header row of description
-#
-#filename = 'trades_as_generated.csv'
-#filename = 'remove_single_worst_trade.csv'
-#filename = 'replicate_best_trades.csv'
-#filename = 'remove_best_and_worst_trades.csv'
-filename = 'remove_worst_trades.csv'
-#
-#  This file was generated from a Normal distribution
-#  using the program  make_trade_list.py 
-#  Set number_of_trades_in_forecast to 504
-#filename = 'generated_normal_trades.csv'
-
-# Number of rows at the beginning of the data file to skip
-skiprows = 1
-trades = np.loadtxt(filename,skiprows=skiprows)
-print (f'using data file:           {filename}')
-print (f'number of entries:         {len(trades)}')
-
-#  Set the parameters describing the personal risk tolerance
-#  of the trader.
-#
-#  I am trading a {initial_capital} account
-#  and wish to forecast {number_forecast_days} into the future.
-#  I want to hold the risk of a drawdown greater than {drawdown_tolerance}
-#  to a chance of {tail_percentile} or less.
-initial_capital = 100000.0
-number_days_in_forecast = 504
-drawdown_tolerance = 0.10
-tail_percentile = 5
-
-#  set number of trades in forecast period.
-#  This will equal number_days_in_forecast if equity
-#  is marked-to-market daily.  It will be smaller if
-#  trades are multi-day.
-number_trades_in_forecast = 70
-
-#  Margin of agreement between drawdown tolerance and estimated trail risk
-desired_accuracy = 0.002 # stops iteration when calculations agree
-
-# set the number of equity curves that make up the distribution
-number_equity_in_CDF = 1000
-
-print ('Parameters for this run:')
-print (f'initial_capital:        {initial_capital:0.0f}')
-print (f'number_days_in_forecast:   {number_days_in_forecast}')
-print (f'number_trades_in_forecast:  {number_trades_in_forecast}')
-print (f'drawdown_tolerance:        {100.0*drawdown_tolerance:0.0f}%')
-print (f'tail_percentile:             {tail_percentile}')
-
-#  A single call to risk_normalization returns both safe_f and CAR25
-#  for the set in 'trades'.
-safe_f, CAR25 = risk_normalization(
-        trades, 
-        number_days_in_forecast, 
-        number_trades_in_forecast,
-        initial_capital, 
-        tail_percentile, 
-        drawdown_tolerance, 
-        number_equity_in_CDF  
-        ) 
-
-print (f'safe_f: {safe_f:0.3f}  CAR25: {CAR25:0.3f}')
-
-print("all done")
