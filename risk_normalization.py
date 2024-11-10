@@ -19,9 +19,9 @@ import numpy as np
 import pandas as pd
 import random
 #import risk_normalization
-import sklearn as skl
+# import sklearn as skl
 import statistics
-import statsmodels as st
+# import statsmodels as st
 
 #  These do not have a __version__ method
 #print (f'math version:               {math.__version__}')
@@ -328,6 +328,26 @@ def risk_normalization(
         number_equity_in_CDF,
         number_repetitions
         ):
+    """
+    Calculates the safe-f and CAR25 metrics for a given set of trades.
+
+    Parameters:
+        trades (numpy.ndarray): The set of trades to evaluate.
+        number_days_in_forecast (int): The forecast period in days.
+        number_trades_in_forecast (int): The number of trades to draw for each equity sequence.
+        initial_capital (float): The initial amount in the trading account.
+        tail_percentile (float): The percentile at which to measure the tail risk (e.g., 5 for the 95th percentile).
+        drawdown_tolerance (float): The trader's drawdown tolerance as a proportion of maximum equity to date.
+        number_equity_in_CDF (int): The number of equity curves used to compute a single CDF.
+        number_repetitions (int): The number of replications to compute mean and standard deviation.
+
+    Returns:
+        tuple: A tuple containing:
+            - safe_f_mean (float): Mean of calculated safe-f values.
+            - safe_f_stdev (float): Standard deviation of safe-f calculations.
+            - CAR25_mean (float): Mean of calculated CAR25 values.
+            - CAR25_stdev (float): Standard deviation of CAR25 calculations.
+    """
 
     safe_fs = []
     TWR25s = []
@@ -431,7 +451,7 @@ newline = '\n'
 
 #  Estimate safe-f and CAR25 for a given csv file
 
-file_name = 'RSIDailyGains.csv'
+file_name = 'generated_normal_trades.csv'
 
 #  This file covers about 28 years of daily trading.
 #  It contains 1185 trades.
@@ -452,7 +472,7 @@ number_trades_in_forecast = 84 # 2 * (1185 / 28)
 initial_capital = 100000.0
 tail_percentile = 5
 drawdown_tolerance = 0.10
-number_equity_in_CDF = 100
+number_equity_in_CDF = 1000
 number_repetitions = 5
 
 safe_f_mean,safe_f_stdev,CAR25_mean,CAR25_stdev = risk_normalization(
