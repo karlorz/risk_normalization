@@ -467,8 +467,14 @@ print (f'There are {len(trades)} marked-to-market daily trades in the file')
 print ('Here are the first 10 trades:')
 print (trades[0:10])
 
-number_days_in_forecast = 504 # 2 years
-number_trades_in_forecast = 84 # 2 * (1185 / 28)
+number_of_years_in_CSV = 28
+average_trades_per_year = len(trades) / number_of_years_in_CSV
+years_to_forecast = 2
+
+# Calculate number of days and trades in forecast period
+number_days_in_forecast = int(years_to_forecast * 252)  # Assuming 252 trading days per year
+number_trades_in_forecast = int(average_trades_per_year * years_to_forecast)
+
 initial_capital = 100000.0
 tail_percentile = 5
 drawdown_tolerance = 0.10
