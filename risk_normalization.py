@@ -478,7 +478,7 @@ number_trades_in_forecast = int(average_trades_per_year * years_to_forecast)
 initial_capital = 100000.0
 tail_percentile = 5
 drawdown_tolerance = 0.10
-number_equity_in_CDF = 1000
+number_equity_in_CDF = 10000
 number_repetitions = 5
 
 safe_f_mean,safe_f_stdev,CAR25_mean,CAR25_stdev = risk_normalization(
