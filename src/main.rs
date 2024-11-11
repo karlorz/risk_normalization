@@ -42,8 +42,12 @@ fn compute_mean(data: &[f64]) -> f64 {
 }
 
 // Function to compute standard deviation of a slice
-fn compute_std_dev(data: &[f64], _mean: f64) -> f64 {
-    data.variance().sqrt()
+fn compute_std_dev(data: &[f64], mean: f64) -> f64 {
+    let variance = data.iter().map(|value| {
+        let diff = value - mean;
+        diff * diff
+    }).sum::<f64>() / data.len() as f64;
+    variance.sqrt()
 }
 
 // Function to calculate maximum drawdown from equity curve
@@ -165,11 +169,11 @@ fn risk_normalization(
 
         let mut lower_bound = 0.0;
         let mut upper_bound = 10.0; // Arbitrary upper limit for fraction
-        let mut tail_risk = 0.0;
+        let mut _tail_risk = 0.0;
 
         while !done && iteration < max_iterations {
             fraction = (lower_bound + upper_bound) / 2.0;
-            tail_risk = analyze_distribution_of_drawdown(
+            _tail_risk = analyze_distribution_of_drawdown(
                 trades,
                 fraction,
                 number_trades_in_forecast,
@@ -179,9 +183,9 @@ fn risk_normalization(
                 &mut rng,
             );
 
-            if (tail_risk - tail_target).abs() < tolerance {
+            if (_tail_risk - tail_target).abs() < tolerance {
                 done = true;
-            } else if tail_risk > tail_target {
+            } else if _tail_risk > tail_target {
                 upper_bound = fraction;
             } else {
                 lower_bound = fraction;
@@ -218,7 +222,7 @@ fn risk_normalization(
         })?;
         car25_list.push(*car25);
 
-        // Print Compound Annual Return for this repetition
+        // Print Compound Annual Return for this repetition with high precision
         println!(
             "Compound Annual Return: {:.5}%",
             *car25
@@ -302,20 +306,59 @@ fn main() {
         }
     };
 
+    // Print results with high precision
     println!(
-        "CAR25 mean:   {:.2}%",
+        "CAR25 mean:   {:.5}%",
         result.car25_mean
     );
     println!(
-        "CAR25 stdev:  {:.2}",
+        "CAR25 stdev:  {:.5}",
         result.car25_stdev
     );
     println!(
-        "safe-f mean:  {:.2}",
+        "safe-f mean:  {:.5}",
         result.safe_f_mean
     );
     println!(
-        "safe-f stdev: {:.2}",
+        "safe-f stdev: {:.5}",
         result.safe_f_stdev
     );
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_compute_mean() {
+        let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        assert_eq!(compute_mean(&data), 3.0);
+    }
+
+    #[test]
+    fn test_compute_std_dev() {
+        let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let mean = 3.0;
+        let expected_std_dev = 1.414213; // Adjust as needed
+        let calculated_std_dev = compute_std_dev(&data, mean);
+        assert!((calculated_std_dev - expected_std_dev).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_calculate_drawdown() {
+        let equity_curve = vec![100.0, 110.0, 105.0, 115.0, 90.0];
+        assert!((calculate_drawdown(&equity_curve) - 0.2173913).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_calculate_cagr() {
+        let initial = 100.0;
+        let final_val = 200.0; // Renamed from `final` to `final_val`
+        let years = 2.0;
+        let expected_cagr = 41.421356;
+        let calculated_cagr = calculate_cagr(initial, final_val, years);
+        assert!((calculated_cagr - expected_cagr).abs() < 1e-5,
+            "Calculated CAGR: {:.6}, Expected CAGR: {:.6}",
+            calculated_cagr, expected_cagr);
+    }
 }
