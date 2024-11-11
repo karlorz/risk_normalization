@@ -149,14 +149,15 @@ fn risk_normalization(
     drawdown_tolerance: f64,
     number_equity_in_cdf: usize,
     number_repetitions: usize,
+    rng: &mut StdRng,
 ) -> Result<RiskNormalizationResult, Box<dyn Error>> {
     let desired_accuracy = 0.003;
     let mut safe_f_list = Vec::with_capacity(number_repetitions);
     let mut car25_list = Vec::with_capacity(number_repetitions);
 
-    // Initialize RNG with a fixed seed for reproducibility
-    let seed: u64 = 42;
-    let mut rng = StdRng::seed_from_u64(seed);
+    // // Initialize RNG with a fixed seed for reproducibility
+    // let seed: u64 = 42;
+    // let mut rng = StdRng::seed_from_u64(seed);
 
     for rep in 0..number_repetitions {
         let mut fraction = 1.0;
@@ -180,7 +181,7 @@ fn risk_normalization(
                 initial_capital,
                 drawdown_tolerance,
                 number_equity_in_cdf,
-                &mut rng,
+                rng,
             );
 
             if (_tail_risk - tail_target).abs() < tolerance {
@@ -203,7 +204,7 @@ fn risk_normalization(
                 fraction,
                 number_trades_in_forecast,
                 initial_capital,
-                &mut rng,
+                rng,
             );
 
             let years = number_days_in_forecast as f64 / 252.0;
@@ -288,6 +289,16 @@ fn main() {
     let number_equity_in_cdf = 10000;
     let number_repetitions = 5;
 
+    // Define the seed option
+    let _seed: Option<u64> = Some(42); // None for random seed
+    let _seed: Option<u64> = None; // None for random seed
+
+    // Initialize RNG based on the seed
+    let mut rng = match _seed {
+        Some(seed_value) => StdRng::seed_from_u64(seed_value),
+        None => StdRng::from_entropy(),
+    };
+
     // Call risk_normalization function
     let result = match risk_normalization(
         &trades,
@@ -298,6 +309,7 @@ fn main() {
         drawdown_tolerance,
         number_equity_in_cdf,
         number_repetitions,
+        &mut rng,
     ) {
         Ok(res) => res,
         Err(e) => {
