@@ -1,12 +1,8 @@
 // src/main.rs
 
-use risk_normalization::{
-    read_trades_from_csv, compute_mean, compute_std_dev, calculate_drawdown, calculate_cagr,
-    make_one_equity_sequence, analyze_distribution_of_drawdown, compute_statistics, risk_normalization,
-    RiskNormalizationResult,
-};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
+use risk_normalization::{read_trades_from_csv, risk_normalization};
 use std::error::Error;
 use std::process;
 
@@ -57,6 +53,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Define the seed option
     let seed: Option<u64> = Some(42); // Some(seed) for fixed seed, None for random seed
+    // let seed: Option<u64> = None; // Some(seed) for fixed seed, None for random seed
 
     // Initialize RNG based on the seed
     let mut rng = match seed {
@@ -84,25 +81,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     // Print results with high precision
-    println!(
-        "Risk Normalization Results:"
-    );
-    println!(
-        "CAR25 Mean:   {:.5}%",
-        result.car25_mean
-    );
-    println!(
-        "CAR25 Std Dev:  {:.5}",
-        result.car25_stdev
-    );
-    println!(
-        "Safe-F Mean:  {:.5}",
-        result.safe_f_mean
-    );
-    println!(
-        "Safe-F Std Dev: {:.5}",
-        result.safe_f_stdev
-    );
+    println!("Risk Normalization Results:");
+    println!("CAR25 Mean:   {:.5}%", result.car25_mean);
+    println!("CAR25 Std Dev:  {:.5}", result.car25_stdev);
+    println!("Safe-F Mean:  {:.5}", result.safe_f_mean);
+    println!("Safe-F Std Dev: {:.5}", result.safe_f_stdev);
 
     Ok(())
 }
@@ -139,8 +122,11 @@ mod tests {
         let years = 2.0;
         let expected_cagr = 41.421356;
         let calculated_cagr = calculate_cagr(initial, final_val, years);
-        assert!((calculated_cagr - expected_cagr).abs() < 1e-5,
+        assert!(
+            (calculated_cagr - expected_cagr).abs() < 1e-5,
             "Calculated CAGR: {:.6}, Expected CAGR: {:.6}",
-            calculated_cagr, expected_cagr);
+            calculated_cagr,
+            expected_cagr
+        );
     }
 }

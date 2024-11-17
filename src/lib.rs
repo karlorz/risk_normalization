@@ -3,7 +3,6 @@
 use csv::ReaderBuilder;
 use rand::distributions::{Distribution, Uniform};
 use rand::rngs::StdRng;
-use rand::SeedableRng;
 use statrs::statistics::Statistics;
 use std::error::Error;
 use std::fmt;
@@ -54,10 +53,14 @@ pub fn compute_mean(data: &[f64]) -> f64 {
 
 // Function to compute standard deviation of a slice
 pub fn compute_std_dev(data: &[f64], mean: f64) -> f64 {
-    let variance = data.iter().map(|value| {
-        let diff = value - mean;
-        diff * diff
-    }).sum::<f64>() / data.len() as f64;
+    let variance = data
+        .iter()
+        .map(|value| {
+            let diff = value - mean;
+            diff * diff
+        })
+        .sum::<f64>()
+        / data.len() as f64;
     variance.sqrt()
 }
 
@@ -201,7 +204,11 @@ pub fn risk_normalization(
             );
 
             let years = number_days_in_forecast as f64 / 252.0;
-            let cagr = calculate_cagr(initial_capital, _equity_curve.last().unwrap().clone(), years);
+            let cagr = calculate_cagr(
+                initial_capital,
+                _equity_curve.last().unwrap().clone(),
+                years,
+            );
             car_list.push(cagr);
         }
 
@@ -217,10 +224,7 @@ pub fn risk_normalization(
         car25_list.push(*car25);
 
         // Print Compound Annual Return for this repetition with high precision
-        println!(
-            "Compound Annual Return: {:.5}%",
-            *car25
-        );
+        println!("Compound Annual Return: {:.5}%", *car25);
     }
 
     // Compute statistics for safe_f
