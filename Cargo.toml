@@ -8,3 +8,8 @@ csv = "1.1"
 rand = "0.8"
 statrs = "0.17.1"
 itertools = "0.10"
+rayon = "1.10.0"
+
+[lib]
+name = "risk_normalization"
+path = "src/lib.rs"
