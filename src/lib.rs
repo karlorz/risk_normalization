@@ -240,3 +240,44 @@ pub fn risk_normalization(
         car25_stdev,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_compute_mean() {
+        let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        assert_eq!(compute_mean(&data), 3.0);
+    }
+
+    #[test]
+    fn test_compute_std_dev() {
+        let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let mean = 3.0;
+        let expected_std_dev = 1.414213;
+        let calculated_std_dev = compute_std_dev(&data, mean);
+        assert!((calculated_std_dev - expected_std_dev).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_calculate_drawdown() {
+        let equity_curve = vec![100.0, 110.0, 105.0, 115.0, 90.0];
+        assert!((calculate_drawdown(&equity_curve) - 0.2173913).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_calculate_cagr() {
+        let initial = 100.0;
+        let final_val = 200.0;
+        let years = 2.0;
+        let expected_cagr = 41.421356;
+        let calculated_cagr = calculate_cagr(initial, final_val, years);
+        assert!(
+            (calculated_cagr - expected_cagr).abs() < 1e-5,
+            "Calculated CAGR: {:.6}, Expected CAGR: {:.6}",
+            calculated_cagr,
+            expected_cagr
+        );
+    }
+}
