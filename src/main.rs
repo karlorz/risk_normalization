@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Define the seed option
     let seed: Option<u64> = Some(42); // Some(seed) for fixed seed, None for random seed
-    // let seed: Option<u64> = None; // Some(seed) for fixed seed, None for random seed
+                                      // let seed: Option<u64> = None; // Some(seed) for fixed seed, None for random seed
 
     // Initialize RNG based on the seed
     let mut rng = match seed {
@@ -92,12 +92,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn test_compute_mean() {
         let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
-        assert_eq!(compute_mean(&data), 3.0);
+        assert_eq!(risk_normalization::compute_mean(&data), 3.0);
     }
 
     #[test]
@@ -105,14 +104,14 @@ mod tests {
         let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
         let mean = 3.0;
         let expected_std_dev = 1.414213; // Adjust as needed
-        let calculated_std_dev = compute_std_dev(&data, mean);
+        let calculated_std_dev = risk_normalization::compute_std_dev(&data, mean);
         assert!((calculated_std_dev - expected_std_dev).abs() < 1e-6);
     }
 
     #[test]
     fn test_calculate_drawdown() {
         let equity_curve = vec![100.0, 110.0, 105.0, 115.0, 90.0];
-        assert!((calculate_drawdown(&equity_curve) - 0.2173913).abs() < 1e-5);
+        assert!((risk_normalization::calculate_drawdown(&equity_curve) - 0.2173913).abs() < 1e-5);
     }
 
     #[test]
@@ -121,7 +120,7 @@ mod tests {
         let final_val = 200.0; // Renamed from `final` to `final_val`
         let years = 2.0;
         let expected_cagr = 41.421356;
-        let calculated_cagr = calculate_cagr(initial, final_val, years);
+        let calculated_cagr = risk_normalization::calculate_cagr(initial, final_val, years);
         assert!(
             (calculated_cagr - expected_cagr).abs() < 1e-5,
             "Calculated CAGR: {:.6}, Expected CAGR: {:.6}",
