@@ -1,11 +1,19 @@
 // src/calculations/mod.rs
 
+pub mod basic;
+pub mod concurrent;
+
+// Re-export functions for easier access
+pub use basic::risk_normalization_basic;
+pub use concurrent::risk_normalization_concurrent;
+
+// Re-export structs and errors
+// pub use RiskNormalizationResult;
+// pub use RiskNormalizationError;
+
 use serde::Serialize;
 use std::fmt;
 use std::error::Error;
-
-pub mod basic;
-pub mod concurrent;
 
 #[derive(Debug, Serialize)]
 pub struct RiskNormalizationResult {

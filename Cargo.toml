@@ -15,3 +15,7 @@ serde_json = "1.0.133"
 [lib]
 name = "risk_normalization_lib"
 path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"] # Optional: if you need dynamic linking
+
+[features]
+default = []

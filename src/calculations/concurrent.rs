@@ -1,10 +1,10 @@
 // src/calculations/concurrent.rs
 
 use rand::SeedableRng;
-use rand::Rng; // Import the Rng trait to use `.gen()`
+use rand::Rng;
 use rand::rngs::StdRng;
 use rayon::prelude::*;
-use crate::{RiskNormalizationResult, RiskNormalizationError};
+use crate::calculations::{RiskNormalizationResult, RiskNormalizationError};
 use crate::utils::*;
 
 pub fn risk_normalization_concurrent(

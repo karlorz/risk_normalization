@@ -1,7 +1,7 @@
 // src/calculations/basic.rs
 
 use rand::rngs::StdRng;
-use crate::{RiskNormalizationResult, RiskNormalizationError};
+use crate::calculations::{RiskNormalizationResult, RiskNormalizationError};
 use crate::utils::*;
 
 pub fn risk_normalization_basic(
